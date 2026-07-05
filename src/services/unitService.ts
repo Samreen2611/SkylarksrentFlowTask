@@ -29,6 +29,19 @@ export const getUnitsByProperty = (propertyId: string, callback: (units: any[]) 
     });
 };
 
+export const getAllUnits = (callback: (units: any[]) => void) => {
+  const uid = authInstance.currentUser?.uid;
+  if (!uid) return () => {};
+
+  return db
+    .collection('units')
+    .where('ownerId', '==', uid)
+    .onSnapshot((snapshot) => {
+      const units = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      callback(units);
+    });
+};
+
 export const deleteUnit = async (unitId: string) => {
   await db.collection('units').doc(unitId).delete();
 };

@@ -15,6 +15,8 @@ import AgreementDetailScreen from '../screens/agreements/AgreementDetailScreen';
 import RentRecordsListScreen from '../screens/rentrecords/RentRecordsListScreen';
 import GenerateRentScreen from '../screens/rentrecords/GenerateRentScreen';
 import RentRecordDetailScreen from '../screens/rentrecords/RentRecordDetailScreen';
+import ReportsScreen from '../screens/reports/ReportsScreen';
+import AddExpenseScreen from '../screens/reports/AddExpenseScreen';
 import SettingsScreen from '../screens/settings/SettingsScreen';
 import { colors } from '../theme/colors';
 
@@ -23,6 +25,7 @@ const PropertiesStack = createNativeStackNavigator();
 const TenantsStack = createNativeStackNavigator();
 const AgreementsStack = createNativeStackNavigator();
 const RentRecordsStack = createNativeStackNavigator();
+const ReportsStack = createNativeStackNavigator();
 
 function PropertiesStackNavigator() {
   return (
@@ -65,6 +68,15 @@ function RentRecordsStackNavigator() {
   );
 }
 
+function ReportsStackNavigator() {
+  return (
+    <ReportsStack.Navigator screenOptions={{ headerShown: false }}>
+      <ReportsStack.Screen name="ReportsMain" component={ReportsScreen} />
+      <ReportsStack.Screen name="AddExpense" component={AddExpenseScreen} />
+    </ReportsStack.Navigator>
+  );
+}
+
 export default function MainNavigator() {
   return (
     <Tab.Navigator
@@ -79,6 +91,7 @@ export default function MainNavigator() {
       <Tab.Screen name="Tenants" component={TenantsStackNavigator} />
       <Tab.Screen name="Agreements" component={AgreementsStackNavigator} />
       <Tab.Screen name="Rent" component={RentRecordsStackNavigator} />
+      <Tab.Screen name="Reports" component={ReportsStackNavigator} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
