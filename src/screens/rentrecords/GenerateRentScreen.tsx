@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
+import { showSuccess, showError } from '../../utils/toast';
 import { getActiveAgreements, generateMonthlyRent } from '../../services/rentRecordService';
 import { colors } from '../../theme/colors';
 
@@ -18,29 +19,30 @@ export default function GenerateRentScreen({ navigation }: any) {
     return unsub;
   }, []);
 
-  const handleGenerate = async () => {
-    if (!selectedAgreement) {
-      Alert.alert('Error', 'Please select an agreement');
-      return;
-    }
-    setLoading(true);
-    try {
-      await generateMonthlyRent(
-        selectedAgreement.id,
-        selectedAgreement.unitId,
-        selectedAgreement.tenantId,
-        selectedAgreement.rentAmount,
-        month,
-        year
-      );
-      Alert.alert('Success', 'Rent record generated');
-      navigation.goBack();
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+ const handleGenerate = async () => {
+  if (!selectedAgreement) {
+    showError('Please select an agreement');
+    return;
+  }
+  setLoading(true);
+  try {
+    await generateMonthlyRent(
+      selectedAgreement.id,
+      selectedAgreement.unitId,
+      selectedAgreement.tenantId,
+      selectedAgreement.rentAmount,
+      month,
+      year
+    );
+    showSuccess('Rent record generated');
+    navigation.goBack();
+  } catch (error: any) {
+    showError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+   
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingTop: 50 }}>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
+import { showSuccess, showError } from '../../utils/toast';
 import { addProperty } from '../../services/propertyService';
 import { colors } from '../../theme/colors';
 
@@ -12,21 +13,22 @@ export default function AddPropertyScreen({ navigation }: any) {
   const [totalUnits, setTotalUnits] = useState('1');
   const [loading, setLoading] = useState(false);
 
-  const handleSave = async () => {
-    if (!name || !address) {
-      Alert.alert('Error', 'Please fill all fields');
-      return;
-    }
-    setLoading(true);
-    try {
-      await addProperty(name, address, type, parseInt(totalUnits, 10) || 1);
-      navigation.goBack();
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+ const handleSave = async () => {
+  if (!name || !address) {
+    showError('Please fill all fields');
+    return;
+  }
+  setLoading(true);
+  try {
+    await addProperty(name, address, type, parseInt(totalUnits, 10) || 1);
+    showSuccess('Property added successfully');
+    navigation.goBack();
+  } catch (error: any) {
+    showError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingTop: 50 }}>

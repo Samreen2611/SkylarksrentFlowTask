@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { showSuccess, showError } from '../../utils/toast';
 import { addUnit } from '../../services/unitService';
 import { colors } from '../../theme/colors';
 
@@ -9,21 +10,23 @@ export default function AddUnitScreen({ route, navigation }: any) {
   const [rentAmount, setRentAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSave = async () => {
-    if (!unitName || !rentAmount) {
-      Alert.alert('Error', 'Please fill all fields');
-      return;
-    }
-    setLoading(true);
-    try {
-      await addUnit(propertyId, unitName, parseFloat(rentAmount));
-      navigation.goBack();
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+ 
+ const handleSave = async () => {
+  if (!unitName || !rentAmount) {
+    showError('Please fill all fields');
+    return;
+  }
+  setLoading(true);
+  try {
+    await addUnit(propertyId, unitName, parseFloat(rentAmount));
+    showSuccess('Unit added successfully');
+    navigation.goBack();
+  } catch (error: any) {
+    showError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <View style={styles.container}>

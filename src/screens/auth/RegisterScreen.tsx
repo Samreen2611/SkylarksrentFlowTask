@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { showSuccess, showError } from '../../utils/toast';
 import { registerUser } from '../../services/authService';
 import { colors } from '../../theme/colors';
 
@@ -18,11 +19,12 @@ export default function RegisterScreen({ navigation }: any) {
     try {
       await registerUser(name, email, password);
     } catch (error: any) {
-      Alert.alert('Registration Failed', error.message);
+      showError(error.message);
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <View style={styles.container}>

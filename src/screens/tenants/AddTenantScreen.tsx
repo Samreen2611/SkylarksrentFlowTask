@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
+import { showSuccess, showError } from '../../utils/toast';
 import { addTenant } from '../../services/tenantService';
 import { colors } from '../../theme/colors';
 
@@ -10,21 +11,22 @@ export default function AddTenantScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSave = async () => {
-    if (!name || !phone) {
-      Alert.alert('Error', 'Name and phone are required');
-      return;
-    }
-    setLoading(true);
-    try {
-      await addTenant(name, phone, cnic, email);
-      navigation.goBack();
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+ const handleSave = async () => {
+  if (!name || !phone) {
+    showError('Name and phone are required');
+    return;
+  }
+  setLoading(true);
+  try {
+    await addTenant(name, phone, cnic, email);
+    showSuccess('Tenant added successfully');
+    navigation.goBack();
+  } catch (error: any) {
+    showError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingTop: 50 }}>

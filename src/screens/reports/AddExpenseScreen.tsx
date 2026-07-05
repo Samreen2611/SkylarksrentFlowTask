@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
+import { showSuccess, showError } from '../../utils/toast';
 import { addExpense } from '../../services/expenseService';
 import { getProperties } from '../../services/propertyService';
 import { colors } from '../../theme/colors';
@@ -20,20 +21,21 @@ export default function AddExpenseScreen({ navigation }: any) {
   }, []);
 
   const handleSave = async () => {
-    if (!amount) {
-      Alert.alert('Error', 'Please enter amount');
-      return;
-    }
-    setLoading(true);
-    try {
-      await addExpense(selectedProperty?.id, category, parseFloat(amount), description);
-      navigation.goBack();
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!amount) {
+    showError('Please enter amount');
+    return;
+  }
+  setLoading(true);
+  try {
+    await addExpense(selectedProperty?.id, category, parseFloat(amount), description);
+    showSuccess('Expense added successfully');
+    navigation.goBack();
+  } catch (error: any) {
+    showError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingTop: 50 }}>

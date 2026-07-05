@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { showSuccess, showError } from '../../utils/toast';
 import { loginUser } from '../../services/authService';
 import { colors } from '../../theme/colors';
 
@@ -17,7 +18,7 @@ export default function LoginScreen({ navigation }: any) {
     try {
       await loginUser(email, password);
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      showError(error.message);
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
+import { showSuccess, showError } from '../../utils/toast';
 import { getProperties } from '../../services/propertyService';
 import { getUnitsByProperty } from '../../services/unitService';
 import { getTenants } from '../../services/tenantService';
@@ -38,27 +39,28 @@ export default function CreateAgreementScreen({ navigation }: any) {
   }, [selectedProperty]);
 
   const handleCreate = async () => {
-    if (!selectedProperty || !selectedUnit || !selectedTenant || !rentAmount) {
-      Alert.alert('Error', 'Please select property, unit, tenant and enter rent amount');
-      return;
-    }
-    setLoading(true);
-    try {
-      await createAgreement(
-        selectedProperty.id,
-        selectedUnit.id,
-        selectedTenant.id,
-        parseFloat(rentAmount),
-        new Date()
-      );
-      Alert.alert('Success', 'Agreement created. Unit is now OCCUPIED.');
-      navigation.goBack();
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!selectedProperty || !selectedUnit || !selectedTenant || !rentAmount) {
+    showError('Please select property, unit, tenant and enter rent amount');
+    return;
+  }
+  setLoading(true);
+  try {
+    await createAgreement(
+      selectedProperty.id,
+      selectedUnit.id,
+      selectedTenant.id,
+      parseFloat(rentAmount),
+      new Date()
+    );
+    showSuccess('Agreement created. Unit is now OCCUPIED.');
+    navigation.goBack();
+  } catch (error: any) {
+    showError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+   
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingTop: 50 }}>

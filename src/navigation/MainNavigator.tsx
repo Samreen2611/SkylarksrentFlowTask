@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import DashboardScreen from '../screens/dashboard/DashboardScreen';
 import PropertiesListScreen from '../screens/properties/PropertiesListScreen';
 import AddPropertyScreen from '../screens/properties/AddPropertyScreen';
@@ -77,14 +78,28 @@ function ReportsStackNavigator() {
   );
 }
 
+const ICONS: Record<string, string> = {
+  Dashboard: 'home',
+  Properties: 'business',
+  Tenants: 'people',
+  Agreements: 'document-text',
+  Rent: 'cash',
+  Reports: 'bar-chart',
+  Settings: 'settings',
+};
+
 export default function MainNavigator() {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
-      }}
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name={ICONS[route.name]} color={color} size={size} />
+        ),
+        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
+      })}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Properties" component={PropertiesStackNavigator} />

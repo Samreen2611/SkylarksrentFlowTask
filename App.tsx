@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 import { authInstance } from './src/services/firebase';
 import AuthNavigator from './src/navigation/AuthNavigator';
 import MainNavigator from './src/navigation/MainNavigator';
@@ -32,6 +33,7 @@ function App() {
       <NavigationContainer>
         {user ? <MainNavigator /> : <AuthNavigator />}
       </NavigationContainer>
+      <Toast />
     </SafeAreaProvider>
   );
 }

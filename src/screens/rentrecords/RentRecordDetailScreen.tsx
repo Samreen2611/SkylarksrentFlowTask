@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { showSuccess, showError } from '../../utils/toast';
 import { addPayment } from '../../services/paymentService';
 import StatusBadge from '../../components/StatusBadge';
 import { colors } from '../../theme/colors';
@@ -10,26 +11,27 @@ export default function RentRecordDetailScreen({ route, navigation }: any) {
   const [loading, setLoading] = useState(false);
 
   const handleAddPayment = async () => {
-    const amt = parseFloat(amount);
-    if (!amt || amt <= 0) {
-      Alert.alert('Error', 'Enter a valid amount');
-      return;
-    }
-    if (amt > record.remainingAmount) {
-      Alert.alert('Error', `Amount exceeds remaining balance of Rs. ${record.remainingAmount}`);
-      return;
-    }
-    setLoading(true);
-    try {
-      await addPayment(record.id, amt, 'Cash');
-      Alert.alert('Success', 'Payment recorded');
-      navigation.goBack();
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const amt = parseFloat(amount);
+  if (!amt || amt <= 0) {
+    showError('Enter a valid amount');
+    return;
+  }
+  if (amt > record.remainingAmount) {
+    showError(`Amount exceeds remaining balance of Rs. ${record.remainingAmount}`);
+    return;
+  }
+  setLoading(true);
+  try {
+    await addPayment(record.id, amt, 'Cash');
+    showSuccess('Payment recorded');
+    navigation.goBack();
+  } catch (error: any) {
+    showError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+   
 
   return (
     <View style={styles.container}>
