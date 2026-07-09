@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
-import { showSuccess, showError } from '../../utils/toast';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { addProperty } from '../../services/propertyService';
+import { showSuccess, showError } from '../../utils/toast';
 import { colors } from '../../theme/colors';
 
 const PROPERTY_TYPES = ['shop', 'house', 'flat', 'office', 'warehouse'];
@@ -13,22 +13,20 @@ export default function AddPropertyScreen({ navigation }: any) {
   const [totalUnits, setTotalUnits] = useState('1');
   const [loading, setLoading] = useState(false);
 
- const handleSave = async () => {
-  if (!name || !address) {
-    showError('Please fill all fields');
-    return;
-  }
-  setLoading(true);
-  try {
-    await addProperty(name, address, type, parseInt(totalUnits, 10) || 1);
-    showSuccess('Property added successfully');
+  const handleSave = async () => {
+    if (!name || !address) {
+      showError('Please fill all fields');
+      return;
+    }
+    setLoading(true);
+
+    addProperty(name, address, type, parseInt(totalUnits, 10) || 1)
+      .then(() => showSuccess('Synced with server'))
+      .catch((error: any) => showError(error.message));
+
+    showSuccess('Property saved (will sync when online)');
     navigation.goBack();
-  } catch (error: any) {
-    showError(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingTop: 50 }}>
@@ -77,7 +75,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 24, fontWeight: 'bold', color: colors.textPrimary, marginBottom: 20 },
   label: { fontSize: 14, fontWeight: '600', color: colors.textPrimary, marginBottom: 6, marginTop: 12 },
   input: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: 8, padding: 12, fontSize: 15 },
-  typeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  typeRow: { flexDirection: 'row', flexWrap: 'wrap' },
   typeChip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: colors.border, marginRight: 8, marginBottom: 8 },
   typeChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   typeChipText: { color: colors.textSecondary, fontSize: 13 },

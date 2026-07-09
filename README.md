@@ -30,6 +30,11 @@ Software Engineering Student, COMSATS University Islamabad (Attock Campus)
 - **React Navigation** — Bottom Tabs + Native Stack
 - **Firestore Transactions** — for atomic agreement and payment updates
 - **React Native Vector Icons**, **Toast Message**
+## ☁️ Architecture — SaaS & Offline-First
+
+RentFlow follows a **multi-tenant, cloud-based SaaS architecture**. Every landlord's data is isolated in Cloud Firestore using an `ownerId` field, allowing multiple independent users to securely use the same application and backend infrastructure.
+
+The app is also **offline-first**: Firestore's offline persistence is enabled, so data is cached locally on the device. Users can view existing data and continue creating/updating records even without an internet connection. Once connectivity is restored, all changes automatically sync with the cloud database — no manual sync required.
 
 ## 📱 Core Data Model
 

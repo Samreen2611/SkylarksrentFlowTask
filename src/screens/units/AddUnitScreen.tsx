@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { showSuccess, showError } from '../../utils/toast';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { addUnit } from '../../services/unitService';
+import { showSuccess, showError } from '../../utils/toast';
 import { colors } from '../../theme/colors';
 
 export default function AddUnitScreen({ route, navigation }: any) {
@@ -10,23 +10,20 @@ export default function AddUnitScreen({ route, navigation }: any) {
   const [rentAmount, setRentAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
- 
- const handleSave = async () => {
-  if (!unitName || !rentAmount) {
-    showError('Please fill all fields');
-    return;
-  }
-  setLoading(true);
-  try {
-    await addUnit(propertyId, unitName, parseFloat(rentAmount));
-    showSuccess('Unit added successfully');
+  const handleSave = async () => {
+    if (!unitName || !rentAmount) {
+      showError('Please fill all fields');
+      return;
+    }
+    setLoading(true);
+
+    addUnit(propertyId, unitName, parseFloat(rentAmount))
+      .then(() => showSuccess('Synced with server'))
+      .catch((error: any) => showError(error.message));
+
+    showSuccess('Unit saved (will sync when online)');
     navigation.goBack();
-  } catch (error: any) {
-    showError(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <View style={styles.container}>

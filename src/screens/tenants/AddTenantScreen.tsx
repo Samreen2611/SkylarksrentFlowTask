@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
-import { showSuccess, showError } from '../../utils/toast';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { addTenant } from '../../services/tenantService';
+import { showSuccess, showError } from '../../utils/toast';
 import { colors } from '../../theme/colors';
 
 export default function AddTenantScreen({ navigation }: any) {
@@ -11,22 +11,20 @@ export default function AddTenantScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
 
- const handleSave = async () => {
-  if (!name || !phone) {
-    showError('Name and phone are required');
-    return;
-  }
-  setLoading(true);
-  try {
-    await addTenant(name, phone, cnic, email);
-    showSuccess('Tenant added successfully');
+  const handleSave = async () => {
+    if (!name || !phone) {
+      showError('Name and phone are required');
+      return;
+    }
+    setLoading(true);
+
+    addTenant(name, phone, cnic, email)
+      .then(() => showSuccess('Synced with server'))
+      .catch((error: any) => showError(error.message));
+
+    showSuccess('Tenant saved (will sync when online)');
     navigation.goBack();
-  } catch (error: any) {
-    showError(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingTop: 50 }}>

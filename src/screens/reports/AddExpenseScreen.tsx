@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
-import { showSuccess, showError } from '../../utils/toast';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { addExpense } from '../../services/expenseService';
 import { getProperties } from '../../services/propertyService';
+import { showSuccess, showError } from '../../utils/toast';
 import { colors } from '../../theme/colors';
 
 const CATEGORIES = ['Maintenance', 'Repair', 'Utility', 'Tax', 'Insurance', 'Other'];
@@ -21,21 +21,19 @@ export default function AddExpenseScreen({ navigation }: any) {
   }, []);
 
   const handleSave = async () => {
-  if (!amount) {
-    showError('Please enter amount');
-    return;
-  }
-  setLoading(true);
-  try {
-    await addExpense(selectedProperty?.id, category, parseFloat(amount), description);
-    showSuccess('Expense added successfully');
+    if (!amount) {
+      showError('Please enter amount');
+      return;
+    }
+    setLoading(true);
+
+    addExpense(selectedProperty?.id, category, parseFloat(amount), description)
+      .then(() => showSuccess('Synced with server'))
+      .catch((error: any) => showError(error.message));
+
+    showSuccess('Expense saved (will sync when online)');
     navigation.goBack();
-  } catch (error: any) {
-    showError(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ padding: 20, paddingTop: 50 }}>
